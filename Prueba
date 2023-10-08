@@ -1,0 +1,64 @@
+import javax.swing.*;
+import java.awt.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Stack;
+
+public class Main {
+
+    public static void main(String[] args) {
+        JFrame ventana = new JFrame("Clasificador de Pacientes y Doctores");
+        ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        ventana.setSize(400, 300);
+
+        JPanel panel = new JPanel();
+        ventana.add(panel);
+
+        JTextArea texto = new JTextArea(10, 30);
+        texto.setEditable(true);
+        JScrollPane scrol = new JScrollPane(texto);
+        panel.add(scrol);
+
+        Queue<String> queue = new LinkedList<>();
+        Stack<String> stack = new Stack<>();
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader("D:\\datos.txt"));
+            
+String line;
+
+            while ((line = br.readLine()) != null) {
+                if (line.toLowerCase().contains("doctor")) {
+                    texto.append("Doctor: " + line + "\n");
+                } else {
+                    String[] parts = line.split(",");
+                    if (parts.length > 0) {
+                        texto.append(parts[0] + "\n");
+                        queue.offer(parts[0]);
+                        stack.push(parts[0]);
+                    }
+                }
+            }
+
+            br.close();
+
+            texto.append("\nLista en Queue:\n");
+            while (!queue.isEmpty()) {
+                texto.append(queue.poll() + "\n");
+            }
+
+            texto.append("\nLista en Stack:\n");
+            while (!stack.isEmpty()) {
+                texto.append(stack.pop() + "\n");
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        ventana.setVisible(true);
+    }
+}
